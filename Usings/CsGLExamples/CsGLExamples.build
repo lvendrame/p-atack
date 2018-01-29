@@ -1,0 +1,459 @@
+<?xml version="1.0"?>
+<project name="CsGLExamples" default="build-release" basedir=".">
+	<tstamp />
+
+
+<!-- Build All -->
+	<target name="build-all" description="makes release and debug builds, usage: 'nant build-all'">
+		<echo message="Building All Targets." />
+		<call target="build-debug" force="true" />
+		<call target="build-release" force="true" />
+	</target>
+
+
+<!-- Build Debug -->
+	<target name="build-debug" description="makes a debug build, usage: 'nant build-debug'">
+		<echo message="Building Debug Targets." />
+		<call target="clean-debug" force="true" />
+		<call target="setup-properties" force="true" />
+
+		<property name="build.dir" value="bin\Debug" />
+		<property name="debug" value="/debug+" />
+		<property name="exe" value="/t:exe" />
+
+		<mkdir dir="${build.dir}" />
+		<copy todir="${build.dir}">
+			<fileset basedir="dep\Debug">
+				<includes name="csgl.dll" />
+				<includes name="CsGL.pdb" />
+				<includes name="csgl.native.dll" />
+			</fileset>
+		</copy>
+
+		<call target="build-examples" force="true" />
+	</target>
+
+
+<!-- Build Documentation -->
+	<target name="build-doc" description="makes documentation for the basecode, usage: 'nant build-doc'">
+		<echo message="Building Documentation Targets." />
+		<echo message="Requires HtmlHelp compiler (hhc.exe) to be in the system path"/>
+		<call target="build-release" force="true" />
+		<call target="clean-doc" force="true" />
+		<mkdir dir="src\CsGL.Basecode\doc" />
+		<ndoc failonerror="false">
+			<assemblies basedir="${build.dir}">
+				<includes name="CsGL.Basecode.dll" />
+			</assemblies>
+			<summaries basedir=".">
+				<includes name="src\CsGL.Basecode\src\NamespaceSummary.xml" />
+			</summaries>
+			<documenters>
+				<documenter name="MSDN">
+					<property name="OutputDirectory" value="src\CsGL.Basecode\doc\MSDN" />
+					<property name="HtmlHelpName" value="CsGL.Basecode" />
+					<property name="HtmlHelpCompilerFilename" value="hhc.exe" />
+					<property name="IncludeFavorites" value="False" />
+					<property name="Title" value="CsGL.Basecode" />
+					<property name="SplitTOCs" value="False" />
+					<property name="DefaulTOC" value="" />
+					<property name="ShowVisualBasic" value="True" />
+					<property name="ShowMissingSummaries" value="True" />
+					<property name="ShowMissingRemarks" value="False" />
+					<property name="ShowMissingParams" value="True" />
+					<property name="ShowMissingReturns" value="True" />
+					<property name="ShowMissingValues" value="False" />
+					<property name="DocumentInternals" value="False" />
+					<property name="DocumentProtected" value="True" />
+					<property name="DocumentPrivates" value="False" />
+					<property name="DocumentEmptyNamespaces" value="False" />
+					<property name="IncludeAssemblyVersion" value="True" />
+					<property name="CopyrightText" value="2002 The CsGL Development Team" />
+					<property name="CopyrightHref" value="http://csgl.sourceforge.net" />
+				</documenter>
+			</documenters> 
+		</ndoc>
+	</target>
+
+
+<!-- Build Release -->
+	<target name="build-release" description="makes a release build, usage: 'nant build-release'">
+		<echo message="Building Release Targets." />
+		<call target="clean-release" force="true" />
+		<call target="setup-properties" force="true" />
+
+		<property name="build.dir" value="bin\Release" />
+		<property name="debug" value="/o+" />
+		<property name="exe" value="/t:winexe" />
+
+		<mkdir dir="${build.dir}" />
+		<copy todir="${build.dir}">
+			<fileset basedir="dep\Release">
+				<includes name="csgl.dll" />
+				<includes name="csgl.native.dll" />
+			</fileset>
+		</copy>
+
+		<call target="build-examples" force="true" />
+	</target>
+
+
+<!-- Build Examples -->
+	<target name="build-examples" description="internal builder, DO NOT CALL THIS DIRECTLY">
+
+<!-- Basecode -->
+		<echo message="Building ${build.dir}\CsGL.Basecode.dll" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /res:src\CsGL.Basecode\res\BasecodeResources.resources ${dll} /doc:${build.dir}\CsGL.Basecode.xml /out:${build.dir}\CsGL.Basecode.dll src\CsGL.Basecode\src\App.cs src\CsGL.Basecode\src\AppForm.cs src\CsGL.Basecode\src\AssemblyInfo.cs src\CsGL.Basecode\src\HelpForm.cs src\CsGL.Basecode\src\HelpFormDataGrid.cs src\CsGL.Basecode\src\HighResolutionTimer.cs src\CsGL.Basecode\src\Model.cs src\CsGL.Basecode\src\SetupForm.cs src\CsGL.Basecode\src\View.cs" />
+
+<!-- GLUT Contrib -->
+		<echo message="Building ${build.dir}\GlutContribRings.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico ${exe} /out:${build.dir}\GlutContribRings.exe src\GlutContrib\src\GlutContribRings.cs" />
+
+
+<!-- Mesa Demos -->
+		<echo message="Building ${build.dir}\MesaGears.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico ${exe} /out:${build.dir}\MesaGears.exe src\MesaDemos\src\MesaGears.cs" />
+
+		<echo message="Building ${build.dir}\MesaBounce.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico ${exe} /out:${build.dir}\MesaBounce.exe src\MesaDemos\src\MesaBounce.cs" />
+
+<!-- Misc Examples -->
+		<echo message="Building ${build.dir}\MiscPongMania.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\CsGL.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico ${exe} /out:${build.dir}\MiscPongMania.exe src\MiscExamples\src\MiscPongMania.cs" />
+
+		<echo message="Building ${build.dir}\MiscTorus.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico ${exe} /out:${build.dir}\MiscTorus.exe src\MiscExamples\src\MiscTorus.cs" />
+
+<!-- NeHe Lessons -->
+		<echo message="Building ${build.dir}\NeHeBasecodeExample.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico ${exe} /out:${build.dir}\NeHeBasecodeExample.exe src\NeHeLessons\src\NeHeBasecodeExample.cs" />
+
+		<echo message="Building ${build.dir}\NeHeLesson01.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico ${exe} /out:${build.dir}\NeHeLesson01.exe src\NeHeLessons\src\NeHeLesson01.cs" />
+
+		<echo message="Building ${build.dir}\NeHeLesson02.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico ${exe} /out:${build.dir}\NeHeLesson02.exe src\NeHeLessons\src\NeHeLesson02.cs" />
+
+		<echo message="Building ${build.dir}\NeHeLesson03.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico ${exe} /out:${build.dir}\NeHeLesson03.exe src\NeHeLessons\src\NeHeLesson03.cs" />
+
+		<echo message="Building ${build.dir}\NeHeLesson04.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico ${exe} /out:${build.dir}\NeHeLesson04.exe src\NeHeLessons\src\NeHeLesson04.cs" />
+
+		<echo message="Building ${build.dir}\NeHeLesson05.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico ${exe} /out:${build.dir}\NeHeLesson05.exe src\NeHeLessons\src\NeHeLesson05.cs" />
+
+		<echo message="Building ${build.dir}\NeHeLesson06.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico ${exe} /out:${build.dir}\NeHeLesson06.exe src\NeHeLessons\src\NeHeLesson06.cs" />
+
+		<echo message="Building ${build.dir}\NeHeLesson07.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico ${exe} /out:${build.dir}\NeHeLesson07.exe src\NeHeLessons\src\NeHeLesson07.cs" />
+
+		<echo message="Building ${build.dir}\NeHeLesson08.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico ${exe} /out:${build.dir}\NeHeLesson08.exe src\NeHeLessons\src\NeHeLesson08.cs" />
+
+		<echo message="Building ${build.dir}\NeHeLesson09.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico ${exe} /out:${build.dir}\NeHeLesson09.exe src\NeHeLessons\src\NeHeLesson09.cs" />
+
+		<echo message="Building ${build.dir}\NeHeLesson10.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico ${exe} /out:${build.dir}\NeHeLesson10.exe src\NeHeLessons\src\NeHeLesson10.cs" />
+
+		<echo message="Building ${build.dir}\NeHeLesson11.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico ${exe} /out:${build.dir}\NeHeLesson11.exe src\NeHeLessons\src\NeHeLesson11.cs" />
+
+		<echo message="Building ${build.dir}\NeHeLesson12.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico ${exe} /out:${build.dir}\NeHeLesson12.exe src\NeHeLessons\src\NeHeLesson12.cs" />
+
+		<echo message="Building ${build.dir}\NeHeLesson13.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico ${exe} /out:${build.dir}\NeHeLesson13.exe src\NeHeLessons\src\NeHeLesson13.cs" />
+
+		<echo message="Building ${build.dir}\NeHeLesson16.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico ${exe} /out:${build.dir}\NeHeLesson16.exe src\NeHeLessons\src\NeHeLesson16.cs" />
+
+		<echo message="Building ${build.dir}\NeHeLesson17.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico ${exe} /out:${build.dir}\NeHeLesson17.exe src\NeHeLessons\src\NeHeLesson17.cs" />
+
+		<echo message="Building ${build.dir}\NeHeLesson18.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico ${exe} /out:${build.dir}\NeHeLesson18.exe src\NeHeLessons\src\NeHeLesson18.cs" />
+
+		<echo message="Building ${build.dir}\NeHeLesson19.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico ${exe} /out:${build.dir}\NeHeLesson19.exe src\NeHeLessons\src\NeHeLesson19.cs" />
+
+		<echo message="Building ${build.dir}\NeHeLesson20.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico ${exe} /out:${build.dir}\NeHeLesson20.exe src\NeHeLessons\src\NeHeLesson20.cs" />
+
+		<echo message="Building ${build.dir}\NeHeLesson21.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico ${exe} /out:${build.dir}\NeHeLesson21.exe src\NeHeLessons\src\NeHeLesson21.cs" />
+
+		<echo message="Building ${build.dir}\NeHeLesson22.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico ${exe} /out:${build.dir}\NeHeLesson22.exe src\NeHeLessons\src\NeHeLesson22.cs" />
+
+		<echo message="Building ${build.dir}\NeHeLesson23.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico ${exe} /out:${build.dir}\NeHeLesson23.exe src\NeHeLessons\src\NeHeLesson23.cs" />
+
+		<echo message="Building ${build.dir}\NeHeLesson24.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico ${exe} /out:${build.dir}\NeHeLesson24.exe src\NeHeLessons\src\NeHeLesson24.cs" />
+
+		<echo message="Building ${build.dir}\NeHeLesson24a.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico ${exe} /out:${build.dir}\NeHeLesson24a.exe src\NeHeLessons\src\NeHeLesson24a.cs" />
+
+		<echo message="Building ${build.dir}\NeHeLesson25.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico ${exe} /out:${build.dir}\NeHeLesson25.exe src\NeHeLessons\src\NeHeLesson25.cs" />
+
+		<echo message="Building ${build.dir}\NeHeLesson26.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico ${exe} /out:${build.dir}\NeHeLesson26.exe src\NeHeLessons\src\NeHeLesson26.cs" />
+
+		<echo message="Building ${build.dir}\NeHeLesson27.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico ${exe} /out:${build.dir}\NeHeLesson27.exe src\NeHeLessons\src\NeHeLesson27.cs" />
+
+		<echo message="Building ${build.dir}\NeHeLesson28.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico ${exe} /out:${build.dir}\NeHeLesson28.exe src\NeHeLessons\src\NeHeLesson28.cs" />
+
+		<echo message="Building ${build.dir}\NeHeLesson29.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico ${exe} /out:${build.dir}\NeHeLesson29.exe src\NeHeLessons\src\NeHeLesson29.cs" />
+
+		<echo message="Building ${build.dir}\NeHeLesson33.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico ${exe} /out:${build.dir}\NeHeLesson33.exe src\NeHeLessons\src\NeHeLesson33.cs" />
+
+		<echo message="Building ${build.dir}\NeHeLesson34.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico ${exe} /out:${build.dir}\NeHeLesson34.exe src\NeHeLessons\src\NeHeLesson34.cs" />
+
+		<echo message="Building ${build.dir}\NeHeLesson36.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico ${exe} /out:${build.dir}\NeHeLesson36.exe src\NeHeLessons\src\NeHeLesson36.cs" />
+
+		<echo message="Building ${build.dir}\NeHeLesson37.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico ${exe} /out:${build.dir}\NeHeLesson37.exe src\NeHeLessons\src\NeHeLesson37.cs" />
+
+<!--
+
+		<echo message="Building ${build.dir}\NeHeLesson38.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico ${exe} /out:${build.dir}\NeHeLesson38.exe src\NeHeLessons\src\NeHeLesson38.cs" />
+
+		<echo message="Building ${build.dir}\NeHeLesson38e.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico ${exe} /out:${build.dir}\NeHeLesson38e.exe src\NeHeLessons\src\NeHeLesson38e.cs" />
+-->
+
+<!-- Redbook Examples -->
+		<echo message="Building ${build.dir}\RedbookAaindex.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico ${exe} /out:${build.dir}\RedbookAaindex.exe src\RedbookExamples\src\RedbookAaindex.cs" />
+
+		<echo message="Building ${build.dir}\RedbookAapoly.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico ${exe} /out:${build.dir}\RedbookAapoly.exe src\RedbookExamples\src\RedbookAapoly.cs" />
+
+		<echo message="Building ${build.dir}\RedbookAargb.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico ${exe} /out:${build.dir}\RedbookAargb.exe src\RedbookExamples\src\RedbookAargb.cs" />
+
+		<echo message="Building ${build.dir}\RedbookAccanti.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico ${exe} /out:${build.dir}\RedbookAccanti.exe src\RedbookExamples\src\Jitter.cs src\RedbookExamples\src\RedbookAccanti.cs" />
+
+		<echo message="Building ${build.dir}\RedbookAccpersp.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico ${exe} /out:${build.dir}\RedbookAccpersp.exe src\RedbookExamples\src\Jitter.cs src\RedbookExamples\src\RedbookAccpersp.cs" />
+
+		<echo message="Building ${build.dir}\RedbookAlpha.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico ${exe} /out:${build.dir}\RedbookAlpha.exe src\RedbookExamples\src\RedbookAlpha.cs" />
+
+		<echo message="Building ${build.dir}\RedbookAlpha3D.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico ${exe} /out:${build.dir}\RedbookAlpha3D.exe src\RedbookExamples\src\RedbookAlpha3D.cs" />
+
+		<echo message="Building ${build.dir}\RedbookAnti.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico ${exe} /out:${build.dir}\RedbookAnti.exe src\RedbookExamples\src\RedbookAnti.cs" />
+
+		<echo message="Building ${build.dir}\RedbookBezcurve.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico ${exe} /out:${build.dir}\RedbookBezcurve.exe src\RedbookExamples\src\RedbookBezcurve.cs" />
+
+		<echo message="Building ${build.dir}\RedbookBezmesh.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico ${exe} /out:${build.dir}\RedbookBezmesh.exe src\RedbookExamples\src\RedbookBezmesh.cs" />
+
+		<echo message="Building ${build.dir}\RedbookBezsurf.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico ${exe} /out:${build.dir}\RedbookBezsurf.exe src\RedbookExamples\src\RedbookBezsurf.cs" />
+
+		<echo message="Building ${build.dir}\RedbookChecker.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico ${exe} /out:${build.dir}\RedbookChecker.exe src\RedbookExamples\src\RedbookChecker.cs" />
+
+		<echo message="Building ${build.dir}\RedbookClip.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico ${exe} /out:${build.dir}\RedbookClip.exe src\RedbookExamples\src\RedbookClip.cs" />
+
+		<echo message="Building ${build.dir}\RedbookColormat.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico ${exe} /out:${build.dir}\RedbookColormat.exe src\RedbookExamples\src\RedbookColormat.cs" />
+
+		<echo message="Building ${build.dir}\RedbookCube.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico ${exe} /out:${build.dir}\RedbookCube.exe src\RedbookExamples\src\RedbookCube.cs" />
+
+		<echo message="Building ${build.dir}\RedbookDof.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico ${exe} /out:${build.dir}\RedbookDof.exe src\RedbookExamples\src\Jitter.cs src\RedbookExamples\src\RedbookDof.cs" />
+
+		<echo message="Building ${build.dir}\RedbookDouble.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico ${exe} /out:${build.dir}\RedbookDouble.exe src\RedbookExamples\src\RedbookDouble.cs" />
+
+		<echo message="Building ${build.dir}\RedbookDrawf.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico ${exe} /out:${build.dir}\RedbookDrawf.exe src\RedbookExamples\src\RedbookDrawf.cs" />
+
+		<echo message="Building ${build.dir}\RedbookFeedback.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico ${exe} /out:${build.dir}\RedbookFeedback.exe src\RedbookExamples\src\RedbookFeedback.cs" />
+
+		<echo message="Building ${build.dir}\RedbookFog1.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico ${exe} /out:${build.dir}\RedbookFog1.exe src\RedbookExamples\src\RedbookFog1.cs" />
+
+		<echo message="Building ${build.dir}\RedbookFog2.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico ${exe} /out:${build.dir}\RedbookFog2.exe src\RedbookExamples\src\RedbookFog2.cs" />
+
+		<echo message="Building ${build.dir}\RedbookFogIndex1.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico ${exe} /out:${build.dir}\RedbookFogIndex1.exe src\RedbookExamples\src\RedbookFogIndex1.cs" />
+
+		<echo message="Building ${build.dir}\RedbookFogIndex2.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico ${exe} /out:${build.dir}\RedbookFogIndex2.exe src\RedbookExamples\src\RedbookFogIndex2.cs" />
+
+		<echo message="Building ${build.dir}\RedbookFont.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico ${exe} /out:${build.dir}\RedbookFont.exe src\RedbookExamples\src\RedbookFont.cs" />
+
+		<echo message="Building ${build.dir}\RedbookHello.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico ${exe} /out:${build.dir}\RedbookHello.exe src\RedbookExamples\src\RedbookHello.cs" />
+
+		<echo message="Building ${build.dir}\RedbookImage.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico ${exe} /out:${build.dir}\RedbookImage.exe src\RedbookExamples\src\RedbookImage.cs" />
+
+		<echo message="Building ${build.dir}\RedbookLight.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico ${exe} /out:${build.dir}\RedbookLight.exe src\RedbookExamples\src\RedbookLight.cs" />
+
+		<echo message="Building ${build.dir}\RedbookLines.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico ${exe} /out:${build.dir}\RedbookLines.exe src\RedbookExamples\src\RedbookLines.cs" />
+
+		<echo message="Building ${build.dir}\RedbookList.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico ${exe} /out:${build.dir}\RedbookList.exe src\RedbookExamples\src\RedbookList.cs" />
+
+		<echo message="Building ${build.dir}\RedbookMaterial.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico ${exe} /out:${build.dir}\RedbookMaterial.exe src\RedbookExamples\src\RedbookMaterial.cs" />
+
+		<echo message="Building ${build.dir}\RedbookMipmap.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico ${exe} /out:${build.dir}\RedbookMipmap.exe src\RedbookExamples\src\RedbookMipmap.cs" />
+
+		<echo message="Building ${build.dir}\RedbookModel.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico ${exe} /out:${build.dir}\RedbookModel.exe src\RedbookExamples\src\RedbookModel.cs" />
+
+		<echo message="Building ${build.dir}\RedbookMovelight.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico ${exe} /out:${build.dir}\RedbookMovelight.exe src\RedbookExamples\src\RedbookMovelight.cs" />
+
+		<echo message="Building ${build.dir}\RedbookNurbs.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico ${exe} /out:${build.dir}\RedbookNurbs.exe src\RedbookExamples\src\RedbookNurbs.cs" />
+
+		<echo message="Building ${build.dir}\RedbookPicking.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico /t:exe /out:${build.dir}\RedbookPicking.exe src\RedbookExamples\src\RedbookPicking.cs" />
+
+		<echo message="Building ${build.dir}\RedbookPicksquare.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico /t:exe /out:${build.dir}\RedbookPicksquare.exe src\RedbookExamples\src\RedbookPicksquare.cs" />
+
+		<echo message="Building ${build.dir}\RedbookPlane.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico ${exe} /out:${build.dir}\RedbookPlane.exe src\RedbookExamples\src\RedbookPlane.cs" />
+
+		<echo message="Building ${build.dir}\RedbookPlanet.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico ${exe} /out:${build.dir}\RedbookPlanet.exe src\RedbookExamples\src\RedbookPlanet.cs" />
+
+		<echo message="Building ${build.dir}\RedbookPolyoff.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico ${exe} /out:${build.dir}\RedbookPolyoff.exe src\RedbookExamples\src\RedbookPolyoff.cs" />
+
+		<echo message="Building ${build.dir}\RedbookPolys.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico ${exe} /out:${build.dir}\RedbookPolys.exe src\RedbookExamples\src\RedbookPolys.cs" />
+
+		<echo message="Building ${build.dir}\RedbookQuadric.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico ${exe} /out:${build.dir}\RedbookQuadric.exe src\RedbookExamples\src\RedbookQuadric.cs" />
+
+		<echo message="Building ${build.dir}\RedbookRobot.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico ${exe} /out:${build.dir}\RedbookRobot.exe src\RedbookExamples\src\RedbookRobot.cs" />
+
+		<echo message="Building ${build.dir}\RedbookSccolorlight.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico ${exe} /out:${build.dir}\RedbookSccolorlight.exe src\RedbookExamples\src\RedbookSccolorlight.cs" />
+
+		<echo message="Building ${build.dir}\RedbookScene.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico ${exe} /out:${build.dir}\RedbookScene.exe src\RedbookExamples\src\RedbookScene.cs" />
+
+		<echo message="Building ${build.dir}\RedbookScenebamb.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico ${exe} /out:${build.dir}\RedbookScenebamb.exe src\RedbookExamples\src\RedbookScenebamb.cs" />
+
+		<echo message="Building ${build.dir}\RedbookSceneflat.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico ${exe} /out:${build.dir}\RedbookSceneflat.exe src\RedbookExamples\src\RedbookSceneflat.cs" />
+
+		<echo message="Building ${build.dir}\RedbookSelect.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico /t:exe /out:${build.dir}\RedbookSelect.exe src\RedbookExamples\src\RedbookSelect.cs" />
+
+		<echo message="Building ${build.dir}\RedbookSmooth.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico ${exe} /out:${build.dir}\RedbookSmooth.exe src\RedbookExamples\src\RedbookSmooth.cs" />
+
+		<echo message="Building ${build.dir}\RedbookStencil.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico ${exe} /out:${build.dir}\RedbookStencil.exe src\RedbookExamples\src\RedbookStencil.cs" />
+
+		<echo message="Building ${build.dir}\RedbookStroke.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico ${exe} /out:${build.dir}\RedbookStroke.exe src\RedbookExamples\src\RedbookStroke.cs" />
+
+		<echo message="Building ${build.dir}\RedbookSurface.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico ${exe} /out:${build.dir}\RedbookSurface.exe src\RedbookExamples\src\RedbookSurface.cs" />
+
+		<echo message="Building ${build.dir}\RedbookTeaambient.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico ${exe} /out:${build.dir}\RedbookTeaambient.exe src\RedbookExamples\src\RedbookTeaambient.cs" />
+
+		<echo message="Building ${build.dir}\RedbookTeapots.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico ${exe} /out:${build.dir}\RedbookTeapots.exe src\RedbookExamples\src\RedbookTeapots.cs" />
+
+		<echo message="Building ${build.dir}\RedbookTexturesurf.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico ${exe} /out:${build.dir}\RedbookTexturesurf.exe src\RedbookExamples\src\RedbookTexturesurf.cs" />
+
+		<echo message="Building ${build.dir}\RedbookTorus.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico ${exe} /out:${build.dir}\RedbookTorus.exe src\RedbookExamples\src\RedbookTorus.cs" />
+
+<!-- Schaap Examples -->
+		<echo message="Building ${build.dir}\SchaapCoolEffect.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico ${exe} /out:${build.dir}\SchaapCoolEffect.exe src\SchaapExamples\src\Vector3D.cs src\SchaapExamples\src\Particle.cs src\SchaapExamples\src\ParticleEngine.cs src\SchaapExamples\src\CoolEffect2.cs src\SchaapExamples\src\SchaapCoolEffect.cs" />
+
+		<echo message="Building ${build.dir}\SchaapFire.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico ${exe} /out:${build.dir}\SchaapFire.exe src\SchaapExamples\src\Vector3D.cs src\SchaapExamples\src\Particle.cs src\SchaapExamples\src\ParticleEngine.cs src\SchaapExamples\src\CoolEffect3.cs src\SchaapExamples\src\SchaapFire.cs" />
+
+		<echo message="Building ${build.dir}\SchaapFireworks.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico ${exe} /out:${build.dir}\SchaapFireworks.exe src\SchaapExamples\src\Vector3D.cs src\SchaapExamples\src\Particle.cs src\SchaapExamples\src\ParticleEngine.cs src\SchaapExamples\src\Firework.cs src\SchaapExamples\src\SchaapFireworks.cs" />
+
+		<echo message="Building ${build.dir}\SchaapParticle.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico ${exe} /out:${build.dir}\SchaapParticle.exe src\SchaapExamples\src\Vector3D.cs src\SchaapExamples\src\Particle.cs src\SchaapExamples\src\ParticleEngine.cs src\SchaapExamples\src\CoolEffect.cs src\SchaapExamples\src\SchaapParticle.cs" />
+
+		<echo message="Building ${build.dir}\SchaapPlasma.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico ${exe} /out:${build.dir}\SchaapPlasma.exe src\SchaapExamples\src\SchaapPlasma.cs" />
+
+		<echo message="Building ${build.dir}\SchaapWaterEffect.exe" />
+		<exec program="csc" commandline="${debug} /nologo /r:${build.dir}\csgl.dll /r:${build.dir}\CsGL.Basecode.dll /win32icon:src\CsGL.Basecode\res\AppFormIcon.ico ${exe} /out:${build.dir}\SchaapWaterEffect.exe src\SchaapExamples\src\SchaapWaterEffect.cs" />
+	</target>
+
+<!-- Clean -->
+	<target name="clean" description="removes all generated files, usage: 'nant clean'">
+		<echo message="Cleaning All Targets." />
+		<delete dir="bin\Debug" failonerror="false" />
+		<delete dir="bin\Release" failonerror="false" />
+		<delete dir="src\CsGL.Basecode\doc" failonerror="false" />
+	</target>
+
+
+<!-- Clean Debug -->
+	<target name="clean-debug" description="removes all generated debug files, usage: 'nant clean-debug'">
+		<echo message="Cleaning Debug Targets." />
+		<delete dir="bin\Debug" failonerror="false" />
+	</target>
+
+
+<!-- Clean Documentation -->
+	<target name="clean-doc" description="removes all generated documentation files, usage: 'nant clean-doc'">
+		<echo message="Cleaning Documentation Targets." />
+		<delete dir="src\CsGL.Basecode\doc" failonerror="false" />
+	</target>
+
+
+<!-- Clean Release -->
+	<target name="clean-release" description="removes all generated release files, usage: 'nant clean-release'">
+		<echo message="Cleaning Release Targets." />
+		<delete dir="bin\Release" failonerror="false" />
+	</target>
+
+
+<!-- Setup Properties -->
+	<target name="setup-properties" description="internal build setup, DO NOT CALL THIS DIRECTLY">
+		<property name="build.dir" value="bin" />
+		<property name="debug" value="/debug-" />
+		<property name="dll" value="/t:library" />
+		<property name="exe" value="/t:exe" />
+	</target>
+</project>

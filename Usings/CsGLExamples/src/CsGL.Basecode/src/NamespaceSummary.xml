@@ -1,0 +1,5 @@
+<namespaces>
+	<namespace name="CsGL.Basecode">
+		The <b>CsGL.Basecode</b> Namespace Provides A Simple, Yet Feature-Rich Framework For Developing OpenGL Applications Using CsGL (The .Net Wrapper For OpenGL).
+	</namespace>
+</namespaces>

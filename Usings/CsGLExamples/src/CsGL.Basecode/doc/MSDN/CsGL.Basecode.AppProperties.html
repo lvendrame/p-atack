@@ -1,0 +1,87 @@
+﻿<html dir="LTR"><head><META http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="vs_targetSchema" content="http://schemas.microsoft.com/intellisense/ie5"><title>App Properties</title><xml></xml><link rel="stylesheet" type="text/css" href="MSDN.css"></head><body id="bodyID" class="dtBODY"><div id="nsbanner"><div id="bannerrow1"><table class="bannerparthead" cellspacing="0"><tr id="hdr"><td class="runninghead">CsGL.Basecode</td><td class="product"></td></tr></table></div><div id="TitleRow"><h1 class="dtH1">App Properties</h1></div></div><div id="nstext"><p>The properties of the <b>App</b> class are listed below. For a complete list of <b>App</b> class members, see the <a href="CsGL.Basecode.AppMembers.html">App Members</a> topic.</p><h4 class="dtH4">Public Static (Shared) Properties</h4><div class="tablediv"><table class="dtTABLE" cellspacing="0">
+<tr VALIGN="top"><td width="50%"><a href="CsGL.Basecode.App.AccumDepth.html">AccumDepth</a></td><td width="50%">
+            Gets or sets OpenGL's accumulation buffer depth, in bits per pixel.
+            </td></tr>
+<tr VALIGN="top"><td width="50%"><a href="CsGL.Basecode.App.ColorDepth.html">ColorDepth</a></td><td width="50%">
+            Gets or sets the current color depth, in bits per pixel.
+            </td></tr>
+<tr VALIGN="top"><td width="50%"><a href="CsGL.Basecode.App.CurrentFramerate.html">CurrentFramerate</a></td><td width="50%">
+            Gets the current framerate, in frames per second.
+            </td></tr>
+<tr VALIGN="top"><td width="50%"><a href="CsGL.Basecode.App.CurrentFrameTime.html">CurrentFrameTime</a></td><td width="50%">
+            Gets the frametime, in ticks, when the current frame began drawing.
+            </td></tr>
+<tr VALIGN="top"><td width="50%"><a href="CsGL.Basecode.App.FarClippingPlane.html">FarClippingPlane</a></td><td width="50%">
+            Gets or sets GLU's distance from the viewer to the far clipping plane (always positive).
+            </td></tr>
+<tr VALIGN="top"><td width="50%"><a href="CsGL.Basecode.App.Form.html">Form</a></td><td width="50%">
+            Gets or sets the application's form.  Should likely only be used in <a href="CsGL.Basecode.Model.WindowsForm.html">WindowsForm</a>.
+            </td></tr>
+<tr VALIGN="top"><td width="50%"><a href="CsGL.Basecode.App.FovY.html">FovY</a></td><td width="50%">
+            Gets or sets GLU's field of view angle, in degrees, in the Y direction.
+            </td></tr>
+<tr VALIGN="top"><td width="50%"><a href="CsGL.Basecode.App.FramerateReady.html">FramerateReady</a></td><td width="50%">
+            Gets whether or not a framerate has been calculated.
+            </td></tr>
+<tr VALIGN="top"><td width="50%"><a href="CsGL.Basecode.App.Height.html">Height</a></td><td width="50%">
+            Gets or sets the height of the application's window at creation.
+            </td></tr>
+<tr VALIGN="top"><td width="50%"><a href="CsGL.Basecode.App.HighestFramerate.html">HighestFramerate</a></td><td width="50%">
+            Gets the highest framerate, in frames per second, recorded for the application's run.
+            </td></tr>
+<tr VALIGN="top"><td width="50%"><a href="CsGL.Basecode.App.IsActive.html">IsActive</a></td><td width="50%">
+            Gets or sets the application's active state.  You could use this to make your application 
+            idle while it's inactive by setting this property in your Windows Form's Activate and 
+            Deactivated events.
+            </td></tr>
+<tr VALIGN="top"><td width="50%"><a href="CsGL.Basecode.App.IsFullscreen.html">IsFullscreen</a></td><td width="50%">
+            Gets or sets whether the application is currently in fullscreen or windowed mode.  You
+            should likely only use this to get, except if you define it in <a href="CsGL.Basecode.App.Model.html">Model</a>.
+            After the start of your application, use <a href="CsGL.Basecode.App.ToggleFullscreen.html">ToggleFullscreen</a>.
+            </td></tr>
+<tr VALIGN="top"><td width="50%"><a href="CsGL.Basecode.App.IsRgba.html">IsRgba</a></td><td width="50%">
+            Gets or sets whether the application uses RGBA or color index mode.
+            </td></tr>
+<tr VALIGN="top"><td width="50%"><a href="CsGL.Basecode.App.IsRunning.html">IsRunning</a></td><td width="50%">
+            Gets whether or not the application is currently running.
+            </td></tr>
+<tr VALIGN="top"><td width="50%"><a href="CsGL.Basecode.App.LowestFramerate.html">LowestFramerate</a></td><td width="50%">
+            Gets the lowest framerate, in frames per second, recorded for the application's run.
+            </td></tr>
+<tr VALIGN="top"><td width="50%"><a href="CsGL.Basecode.App.Model.html">Model</a></td><td width="50%">
+            Gets the application's <a href="CsGL.Basecode.App.Model.html">Model</a>.
+            </td></tr>
+<tr VALIGN="top"><td width="50%"><a href="CsGL.Basecode.App.NearClippingPlane.html">NearClippingPlane</a></td><td width="50%">
+            Gets or sets GLU's distance from the viewer to the near clipping plane (always positive).
+            </td></tr>
+<tr VALIGN="top"><td width="50%"><a href="CsGL.Basecode.App.RunWhileMinimized.html">RunWhileMinimized</a></td><td width="50%">
+            Gets or sets whether the application should continue running the main loop even when 
+            the application is minimized.  If it shouldn't, it'll wait until the application is put 
+            back into normal mode, saving CPU cycles.
+            </td></tr>
+<tr VALIGN="top"><td width="50%"><a href="CsGL.Basecode.App.ShowCursorFullscreen.html">ShowCursorFullscreen</a></td><td width="50%">
+            Gets or sets whether the mouse cursor should be displayed in fullscreen mode.
+            </td></tr>
+<tr VALIGN="top"><td width="50%"><a href="CsGL.Basecode.App.ShowCursorWindowed.html">ShowCursorWindowed</a></td><td width="50%">
+            Gets or sets whether the mouse cursor should be displayed in windowed mode.
+            </td></tr>
+<tr VALIGN="top"><td width="50%"><a href="CsGL.Basecode.App.ShowStatusBar.html">ShowStatusBar</a></td><td width="50%">
+            Gets or sets whether the StatusBar of the basecode's default windowed form 
+            should be displayed.  If you're providing a custom form, you could use this 
+            however you like.
+            </td></tr>
+<tr VALIGN="top"><td width="50%"><a href="CsGL.Basecode.App.StencilDepth.html">StencilDepth</a></td><td width="50%">
+            Gets or sets OpenGL's stencil buffer depth, in bits per pixel.
+            </td></tr>
+<tr VALIGN="top"><td width="50%"><a href="CsGL.Basecode.App.Timer.html">Timer</a></td><td width="50%">
+            Get's the application's <a href="CsGL.Basecode.HighResolutionTimer.html">HighResolutionTimer</a>.
+            </td></tr>
+<tr VALIGN="top"><td width="50%"><a href="CsGL.Basecode.App.View.html">View</a></td><td width="50%">
+            Gets the application's current <a href="CsGL.Basecode.App.View.html">View</a>.
+            </td></tr>
+<tr VALIGN="top"><td width="50%"><a href="CsGL.Basecode.App.Width.html">Width</a></td><td width="50%">
+            Gets or sets the width of the application's window at creation.
+            </td></tr>
+<tr VALIGN="top"><td width="50%"><a href="CsGL.Basecode.App.ZDepth.html">ZDepth</a></td><td width="50%">
+            Gets or sets OpenGL's Z-buffer depth, in bits per pixel.
+            </td></tr></table></div><h4 class="dtH4">See Also</h4><p><a href="CsGL.Basecode.App.html">App Class</a> | <a href="CsGL.Basecode.html">CsGL.Basecode Namespace</a></p></div><div id="footer"><p><a href="http://csgl.sourceforge.net">2002 The CsGL Development Team</a></p><p>Generated from assembly CsGL.Basecode [1.0.0.0]</p></div></body></html>

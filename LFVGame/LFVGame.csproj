@@ -1,0 +1,195 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{B6A80C31-0C58-47F7-AA32-74B91DE792D6}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>LFVGame</RootNamespace>
+    <AssemblyName>LFVGame</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>2.0</OldToolsVersion>
+    <UpgradeBackupLocation />
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AbstractColidableDrawable.cs" />
+    <Compile Include="Animation.cs" />
+    <Compile Include="Bullets\Bullet.cs" />
+    <Compile Include="Bullets\BulletSettings.cs" />
+    <Compile Include="Combatant.cs" />
+    <Compile Include="CombatantDrawable.cs" />
+    <Compile Include="ContentManager.cs" />
+    <Compile Include="Drawable.cs" />
+    <Compile Include="Items\ItemHolySkul.cs" />
+    <Compile Include="Ships\EnemySpaceShip.cs" />
+    <Compile Include="Explosion.cs" />
+    <Compile Include="GameSprites.cs" />
+    <Compile Include="IDrawable.cs" />
+    <Compile Include="IGameStage.cs" />
+    <Compile Include="Items\Item.cs" />
+    <Compile Include="Items\ItemBullet.cs" />
+    <Compile Include="MainGame.cs" />
+    <Compile Include="Map.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resource.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resource.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Ships\SpaceShip.cs" />
+    <Compile Include="SpritePosition.cs" />
+    <Compile Include="Stages\GenericStage.cs" />
+    <Compile Include="Stages\Presentation.cs" />
+    <Compile Include="Stages\StageOne.cs" />
+    <Compile Include="StaticImages.cs" />
+    <Compile Include="Tile.cs" />
+    <Compile Include="TimeAcumulator.cs" />
+    <Compile Include="Ships\UserSpaceShip.cs" />
+    <Compile Include="Util.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resource.resx">
+      <SubType>Designer</SubType>
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resource.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\map01.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\brick01.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\brick02.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\brick03.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\brick04.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\brick05.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Explosion.gif" />
+    <None Include="Resources\NaveRoxa.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\LFVGL\LFVGL.csproj">
+      <Project>{8262A598-F47E-49CF-AE59-7BF58590309D}</Project>
+      <Name>LFVGL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\LFVMapControler\LFVMapControler.csproj">
+      <Project>{0E757669-6847-4C7A-8B21-694B784BF24C}</Project>
+      <Name>LFVMapControler</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\LFVMath\LFVMath.csproj">
+      <Project>{C0646D7F-B324-4AB1-A7EC-472A95C1EF3D}</Project>
+      <Name>LFVMath</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\NaveBolha.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\bullet01.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\explosion.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\explosion_2.wav" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\NaveRoxaMove.gif" />
+    <None Include="Resources\Logo.bmp" />
+    <None Include="Resources\bullet02.bmp" />
+    <None Include="Resources\Bullet03.bmp" />
+    <None Include="Resources\holySkul.gif" />
+    <None Include="Resources\logo2.jpg" />
+    <None Include="Resources\Bricks\Nave3D_1_pq.png" />
+    <None Include="Resources\Bricks\Nave2.png" />
+    <Content Include="Resources\PlanesGrid.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Content\Bricks\" />
+    <Folder Include="Content\Maps\" />
+    <Folder Include="Content\Sounds\" />
+    <Folder Include="Content\Sprites\" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

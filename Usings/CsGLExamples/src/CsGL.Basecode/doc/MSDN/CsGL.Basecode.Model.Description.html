@@ -1,0 +1,16 @@
+﻿<html dir="LTR"><head><META http-equiv="Content-Type" content="text/html; charset=utf-8"><meta name="vs_targetSchema" content="http://schemas.microsoft.com/intellisense/ie5"><title>Model.Description Property</title><xml></xml><link rel="stylesheet" type="text/css" href="MSDN.css"></head><body id="bodyID" class="dtBODY"><div id="nsbanner"><div id="bannerrow1"><table class="bannerparthead" cellspacing="0"><tr id="hdr"><td class="runninghead">CsGL.Basecode</td><td class="product"></td></tr></table></div><div id="TitleRow"><h1 class="dtH1">Model.Description Property
+					</h1></div></div><div id="nstext"><p>
+            Model-specific description.
+            </p><pre class="syntax"><span class="lang">[Visual Basic]</span><br>Overridable Public ReadOnly Property Description As <a href="ms-help://MS.NETFrameworkSDK/cpref/html/frlrfSystemStringClassTopic.htm">String</a></pre><pre class="syntax"><span class="lang">[C#]</span><br>public <a href="ms-help://MS.NETFrameworkSDK/cpref/html/frlrfSystemStringClassTopic.htm">string</a> Description {virtual get;}</pre><p></p><h4 class="dtH4">Remarks</h4><p>
+            Override this to provide a description of your application for use in the
+            basecode's help screen.  If you're not using the basecode's help screen, 
+            you can either disregard this property, or use it how you like.
+            </p><h4 class="dtH4">Example</h4><p>
+            In your inherited <a href="CsGL.Basecode.Model.html">Model</a>:
+            <pre class="code">
+            public override string Description {
+            	get {
+            		return "My fancy OpenGL lesson!";
+            	}
+            }
+            </pre></p><h4 class="dtH4">See Also</h4><p><a href="CsGL.Basecode.Model.html">Model Class</a> | <a href="CsGL.Basecode.ModelMembers.html">Model Members</a> | <a href="CsGL.Basecode.html">CsGL.Basecode Namespace</a></p><object type="application/x-oleobject" classid="clsid:1e2a7bd0-dab9-11d0-b93a-00c04fc99f9e" viewastext="viewastext"><param name="Keyword" value="Description property"><param name="Keyword" value="Description property, Model class"><param name="Keyword" value="Model.Description property"></object></div><div id="footer"><p><a href="http://csgl.sourceforge.net">2002 The CsGL Development Team</a></p><p>Generated from assembly CsGL.Basecode [1.0.0.0]</p></div></body></html>

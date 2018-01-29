@@ -1,0 +1,6 @@
+(
+	BasecodeResources.resources
+	System.Drawing # download it once ...
+	(AppFormIcon	System.Drawing.Icon	AppFormIcon.ico)
+	(SetupFormLogo	System.Drawing.Bitmap	SetupFormLogo.jpg)
+)
